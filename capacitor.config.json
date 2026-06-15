@@ -1,0 +1,46 @@
+{
+  "appId": "com.glamora.salon",
+  "appName": "Glamora",
+  "webDir": "frontend",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "http://192.168.1.75:3000",
+    "cleartext": true
+  },
+  "ios": {
+    "contentInset": "always",
+    "limitsNavigationsToAppBoundDomains": false,
+    "backgroundColor": "#1A0A0F"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2500,
+      "backgroundColor": "#1A0A0F",
+      "showSpinner": false,
+      "androidSpinnerStyle": "small",
+      "iosSpinnerStyle": "small",
+      "spinnerColor": "#C9728A",
+      "splashFullScreen": true,
+      "splashImmersive": true
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#1A0A0F"
+    },
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ],
+      "sound": "default",
+      "vibrate": true,
+      "importance": "high"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#C9728A",
+      "sound": "beep.wav"
+    }
+  }
+}

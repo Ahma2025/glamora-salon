@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Glamora | صالون المرأة الفاخر</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c2185b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Glamora">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ======= SPLASH SCREEN ======= -->
+  <div id="screen-splash" class="screen active">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-logo">
+        <div class="logo-icon">✦</div>
+        <h1 class="logo-text">Glamora</h1>
+        <p class="logo-tagline">جمالك، أولويتنا</p>
+      </div>
+      <div class="splash-loader">
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= ONBOARDING ======= -->
+  <div id="screen-onboard" class="screen">
+    <div class="onboard-slides">
+      <div class="onboard-slide active" data-slide="0">
+        <div class="onboard-art">
+          <div class="art-circle c1"></div>
+          <div class="art-circle c2"></div>
+          <div class="art-circle c3"></div>
+          <div class="onboard-icon">💎</div>
+        </div>
+        <h2>اكتشفي أفضل صالونات المنطقة</h2>
+        <p>صالونات فاخرة مختارة بعناية، مراجعات حقيقية، أسعار شفافة</p>
+      </div>
+      <div class="onboard-slide" data-slide="1">
+        <div class="onboard-art">
+          <div class="art-circle c1"></div>
+          <div class="art-circle c2"></div>
+          <div class="art-circle c3"></div>
+          <div class="onboard-icon">📅</div>
+        </div>
+        <h2>احجزي موعدك بثواني</h2>
+        <p>اختاري كوفيرتك المفضلة، الخدمة، والوقت المناسب - كل شيء بنقرة واحدة</p>
+      </div>
+      <div class="onboard-slide" data-slide="2">
+        <div class="onboard-art">
+          <div class="art-circle c1"></div>
+          <div class="art-circle c2"></div>
+          <div class="art-circle c3"></div>
+          <div class="onboard-icon">🌟</div>
+        </div>
+        <h2>نقاط مكافآت وعروض حصرية</h2>
+        <p>اكسبي نقاط مع كل زيارة واستمتعي بخصومات وعروض VIP</p>
+      </div>
+    </div>
+    <div class="onboard-dots">
+      <span class="dot active" onclick="goToSlide(0)"></span>
+      <span class="dot" onclick="goToSlide(1)"></span>
+      <span class="dot" onclick="goToSlide(2)"></span>
+    </div>
+    <div class="onboard-actions">
+      <button class="btn-primary full" onclick="showScreen('login')">ابدئي رحلتك ✦</button>
+      <button class="btn-ghost full" onclick="showScreen('register')">حساب جديد مجاناً</button>
+    </div>
+  </div>
+
+  <!-- ======= LOGIN ======= -->
+  <div id="screen-login" class="screen">
+    <div class="auth-header">
+      <button class="back-btn" onclick="showScreen('onboard')">←</button>
+      <div class="auth-logo">✦ Glamora</div>
+    </div>
+    <div class="auth-body">
+      <h2>أهلاً بك مجدداً 💕</h2>
+      <p class="auth-sub">سجّلي دخولك للمتابعة</p>
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input type="tel" id="login-phone" placeholder="05xxxxxxxx" dir="ltr">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="input-wrap">
+          <input type="password" id="login-pass" placeholder="••••••••" dir="ltr">
+          <button class="eye-btn" onclick="togglePass('login-pass')">👁</button>
+        </div>
+      </div>
+      <div id="login-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="doLogin()">
+        <span id="login-btn-text">دخول ✦</span>
+        <span id="login-spinner" class="spinner hidden"></span>
+      </button>
+      <p class="auth-switch">ما عندك حساب؟ <a onclick="showScreen('register')">سجّلي الآن</a></p>
+      <div class="demo-hint">
+        <p>🔑 للتجربة السريعة:</p>
+        <p>زبونة: <strong>0591000001</strong> / <strong>123456</strong></p>
+        <p>كوفيرة: <strong>0591000003</strong> / <strong>123456</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= REGISTER ======= -->
+  <div id="screen-register" class="screen">
+    <div class="auth-header">
+      <button class="back-btn" onclick="showScreen('onboard')">←</button>
+      <div class="auth-logo">✦ Glamora</div>
+    </div>
+    <div class="auth-body">
+      <h2>انضمي إلينا 🌸</h2>
+      <p class="auth-sub">أنشئي حسابك وابدئي رحلة الجمال</p>
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <input type="text" id="reg-name" placeholder="اسمك">
+      </div>
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input type="tel" id="reg-phone" placeholder="05xxxxxxxx" dir="ltr">
+      </div>
+      <div class="form-group">
+        <label>البريد الإلكتروني (اختياري)</label>
+        <input type="email" id="reg-email" placeholder="email@example.com" dir="ltr">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="input-wrap">
+          <input type="password" id="reg-pass" placeholder="6 أحرف على الأقل" dir="ltr">
+          <button class="eye-btn" onclick="togglePass('reg-pass')">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>نوع الحساب</label>
+        <div class="role-select">
+          <div class="role-card active" data-role="client" onclick="selectRole('client')">
+            <span class="role-icon">💅</span>
+            <span>زبونة</span>
+          </div>
+          <div class="role-card" data-role="stylist" onclick="selectRole('stylist')">
+            <span class="role-icon">✂️</span>
+            <span>كوفيرة</span>
+          </div>
+        </div>
+      </div>
+      <div id="reg-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="doRegister()">إنشاء حساب مجاناً ✦</button>
+      <p class="auth-switch">عندك حساب؟ <a onclick="showScreen('login')">دخول</a></p>
+    </div>
+  </div>
+
+  <!-- ======= MAIN APP (with bottom nav) ======= -->
+  <div id="screen-main" class="screen">
+
+    <!-- ---- HOME TAB ---- -->
+    <div id="tab-home" class="tab active">
+      <div class="home-header">
+        <div class="header-top">
+          <div class="header-greeting">
+            <p class="greeting-small">مرحباً بك 💕</p>
+            <h2 id="home-user-name">سارة</h2>
+          </div>
+          <button class="notif-btn" onclick="showNotifications()">
+            🔔
+            <span id="notif-badge" class="badge hidden">3</span>
+          </button>
+        </div>
+        <div class="search-bar" onclick="focusSearch()">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="ابحثي عن صالون أو خدمة..." oninput="searchSalons(this.value)">
+        </div>
+      </div>
+
+      <div class="home-content" id="home-scroll">
+        <!-- Categories -->
+        <div class="section">
+          <div class="cats-scroll">
+            <div class="cat-chip active" onclick="filterCategory(this, '')">الكل</div>
+            <div class="cat-chip" onclick="filterCategory(this, 'صبغ الشعر')">🎨 صبغ</div>
+            <div class="cat-chip" onclick="filterCategory(this, 'قص')">✂️ قص</div>
+            <div class="cat-chip" onclick="filterCategory(this, 'علاجات')">💆 علاجات</div>
+            <div class="cat-chip" onclick="filterCategory(this, 'مكياج')">💄 مكياج</div>
+            <div class="cat-chip" onclick="filterCategory(this, 'أظافر')">💅 أظافر</div>
+            <div class="cat-chip" onclick="filterCategory(this, 'تصفيف')">👑 تصفيف</div>
+          </div>
+        </div>
+
+        <!-- Featured -->
+        <div class="section">
+          <div class="section-header">
+            <h3>صالونات مميزة ✨</h3>
+          </div>
+          <div class="featured-scroll" id="featured-salons"></div>
+        </div>
+
+        <!-- Top Stylists -->
+        <div class="section">
+          <div class="section-header">
+            <h3>الكوفيرات الأعلى تقييماً ⭐</h3>
+          </div>
+          <div class="stylists-grid" id="top-stylists"></div>
+        </div>
+
+        <!-- All Salons -->
+        <div class="section">
+          <div class="section-header">
+            <h3>جميع الصالونات</h3>
+          </div>
+          <div id="salons-list" class="salons-list"></div>
+        </div>
+
+        <div style="height:90px"></div>
+      </div>
+    </div>
+
+    <!-- ---- BOOKINGS TAB ---- -->
+    <div id="tab-bookings" class="tab">
+      <div class="page-header">
+        <h2>حجوزاتي 📅</h2>
+        <div class="booking-tabs">
+          <button class="btab active" onclick="filterBookings('upcoming', this)">القادمة</button>
+          <button class="btab" onclick="filterBookings('past', this)">السابقة</button>
+        </div>
+      </div>
+      <div id="bookings-list" class="bookings-list"></div>
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- ---- CHAT TAB ---- -->
+    <div id="tab-chat" class="tab">
+      <div class="page-header">
+        <h2>رسائلي 💬</h2>
+      </div>
+      <div id="conversations-list" class="conversations-list"></div>
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- ---- PROFILE TAB ---- -->
+    <div id="tab-profile" class="tab">
+      <div class="profile-header-bg">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profile-avatar-text">س</div>
+          <div class="profile-tier-badge" id="profile-tier-badge">وردي</div>
+        </div>
+        <h2 id="profile-name">سارة أحمد</h2>
+        <p id="profile-phone-display">0591000001</p>
+      </div>
+
+      <div class="loyalty-card" id="loyalty-card">
+        <div class="loyalty-top">
+          <div>
+            <p class="loyalty-label">نقاط المكافآت</p>
+            <h2 class="loyalty-points" id="loyalty-points">320</h2>
+          </div>
+          <div class="loyalty-tier-icon" id="loyalty-tier-icon">💎</div>
+        </div>
+        <div class="loyalty-progress-wrap">
+          <div class="loyalty-progress"><div class="loyalty-bar" id="loyalty-bar" style="width:64%"></div></div>
+          <div class="loyalty-progress-labels">
+            <span id="loyalty-current-tier">فضي</span>
+            <span id="loyalty-next-info">180 نقطة للذهبي</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-menu">
+        <div class="profile-menu-item" onclick="showColorHistory()">
+          <span class="menu-icon">🎨</span>
+          <div class="menu-text">
+            <span>تاريخ ألوان شعري</span>
+            <span class="menu-sub">فورمولات جميع الصبغات السابقة</span>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="showLoyaltyHistory()">
+          <span class="menu-icon">⭐</span>
+          <div class="menu-text">
+            <span>سجل النقاط</span>
+            <span class="menu-sub">كيف كسبتِ نقاطك</span>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="doLogout()">
+          <span class="menu-icon">🚪</span>
+          <div class="menu-text">
+            <span>تسجيل الخروج</span>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" onclick="switchTab('home', this)">
+        <span class="nav-icon">🏠</span>
+        <span>الرئيسية</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('bookings', this)">
+        <span class="nav-icon">📅</span>
+        <span>حجوزاتي</span>
+      </button>
+      <button class="nav-btn nav-center-btn" onclick="showScreen('booking-wizard')">
+        <div class="nav-plus">+</div>
+      </button>
+      <button class="nav-btn" onclick="switchTab('chat', this)" style="position:relative">
+        <span class="nav-icon">💬<span id="chat-badge" class="nav-badge hidden"></span></span>
+        <span>الرسائل</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('profile', this)">
+        <span class="nav-icon">👤</span>
+        <span>حسابي</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ======= SALON DETAIL ======= -->
+  <div id="screen-salon" class="screen slide-up">
+    <div class="salon-cover" id="salon-cover">
+      <button class="back-float" onclick="goBack()">←</button>
+      <div class="salon-cover-overlay"></div>
+      <div id="salon-cover-media" class="salon-cover-media-bg"></div>
+      <div class="salon-cover-info">
+        <h2 id="salon-detail-name">صالون غلامورا</h2>
+        <div class="salon-meta">
+          <span>⭐ <span id="salon-detail-rating">4.9</span></span>
+          <span>(<span id="salon-detail-reviews">234</span> تقييم)</span>
+          <span>📍 <span id="salon-detail-city">رام الله</span></span>
+        </div>
+      </div>
+    </div>
+    <!-- Photo Gallery Strip -->
+    <div id="salon-gallery-strip" class="salon-gallery-strip hidden"></div>
+    <div class="salon-tabs">
+      <button class="stab active" onclick="switchSalonTab('services', this)">الخدمات</button>
+      <button class="stab" onclick="switchSalonTab('stylists', this)">الكوفيرات</button>
+      <button class="stab" onclick="switchSalonTab('reviews', this)">التقييمات</button>
+      <button class="stab" onclick="switchSalonTab('info', this)">المعلومات</button>
+    </div>
+    <div id="salon-tab-services" class="salon-tab-content active">
+      <div class="services-filter" id="services-filter"></div>
+      <div id="salon-services-list" class="services-list"></div>
+    </div>
+    <div id="salon-tab-stylists" class="salon-tab-content">
+      <div id="salon-stylists-list" class="salon-stylists"></div>
+    </div>
+    <div id="salon-tab-reviews" class="salon-tab-content">
+      <div id="salon-reviews-list"></div>
+    </div>
+    <div id="salon-tab-info" class="salon-tab-content">
+      <div id="salon-info-content" class="salon-info"></div>
+    </div>
+    <div style="height:90px"></div>
+  </div>
+
+  <!-- ======= BOOKING WIZARD ======= -->
+  <div id="screen-booking-wizard" class="screen slide-up">
+    <div class="wizard-header">
+      <button class="back-btn" onclick="goBack()">←</button>
+      <h2>احجزي موعدك ✨</h2>
+      <div class="wizard-steps">
+        <div class="wstep active" id="ws1">١</div>
+        <div class="wstep-line"></div>
+        <div class="wstep" id="ws2">٢</div>
+        <div class="wstep-line"></div>
+        <div class="wstep" id="ws3">٣</div>
+        <div class="wstep-line"></div>
+        <div class="wstep" id="ws4">٤</div>
+      </div>
+    </div>
+    <div class="wizard-body">
+      <!-- Step 1: Service -->
+      <div id="wstep-1" class="wizard-step active">
+        <h3>اختاري الخدمة</h3>
+        <div class="wizard-service-cats" id="wizard-cats"></div>
+        <div id="wizard-services-list" class="wizard-services"></div>
+      </div>
+      <!-- Step 2: Stylist -->
+      <div id="wstep-2" class="wizard-step">
+        <h3>اختاري كوفيرتك</h3>
+        <div id="wizard-stylists-list" class="wizard-stylists"></div>
+      </div>
+      <!-- Step 3: Date & Time -->
+      <div id="wstep-3" class="wizard-step">
+        <h3>اختاري الوقت</h3>
+        <div class="calendar-wrap" id="mini-calendar"></div>
+        <div id="time-slots-grid" class="time-slots"></div>
+      </div>
+      <!-- Step 4: Confirm -->
+      <div id="wstep-4" class="wizard-step">
+        <h3>تأكيد الحجز</h3>
+        <div id="booking-summary" class="booking-summary"></div>
+        <div class="form-group">
+          <label>ملاحظات (اختياري)</label>
+          <textarea id="booking-notes" placeholder="أي تفاصيل إضافية للكوفيرة..."></textarea>
+        </div>
+        <button class="btn-primary full" onclick="confirmBooking()">تأكيد الحجز 🎉</button>
+      </div>
+    </div>
+    <div class="wizard-footer">
+      <div id="wizard-selected-summary" class="selected-mini hidden"></div>
+      <div class="wizard-nav-btns">
+        <button class="btn-ghost" id="wizard-prev" onclick="wizardPrev()" style="display:none">السابق</button>
+        <button class="btn-primary" id="wizard-next" onclick="wizardNext()">التالي ›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= CHAT CONVERSATION ======= -->
+  <div id="screen-chat-conv" class="screen slide-up">
+    <div class="chat-header">
+      <button class="back-btn" onclick="goBack()">←</button>
+      <div class="chat-header-info">
+        <div class="chat-avatar" id="chat-other-avatar">م</div>
+        <div>
+          <h3 id="chat-other-name">مريم الكوفيرة</h3>
+          <p id="chat-other-status" class="chat-status">متاحة الآن</p>
+        </div>
+      </div>
+    </div>
+    <div id="chat-messages" class="chat-messages"></div>
+    <div id="typing-indicator" class="typing-indicator hidden">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" id="chat-input" placeholder="اكتبي رسالتك..." onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <button class="send-btn" onclick="sendChatMessage()">➤</button>
+    </div>
+  </div>
+
+  <!-- ======= NOTIFICATIONS PANEL ======= -->
+  <div id="screen-notifications" class="screen slide-up">
+    <div class="page-header">
+      <button class="back-btn" onclick="goBack()">←</button>
+      <h2>الإشعارات 🔔</h2>
+    </div>
+    <div id="notifs-list" class="notifs-list"></div>
+  </div>
+
+  <!-- ======= COLOR HISTORY ======= -->
+  <div id="screen-color-history" class="screen slide-up">
+    <div class="page-header">
+      <button class="back-btn" onclick="goBack()">←</button>
+      <h2>تاريخ ألوان شعري 🎨</h2>
+    </div>
+    <div id="color-history-list" class="color-history-list"></div>
+  </div>
+
+  <!-- ======= SUCCESS MODAL ======= -->
+  <div id="modal-success" class="modal-overlay hidden">
+    <div class="modal-box success-modal">
+      <div class="success-icon">📤</div>
+      <h2>تم إرسال طلب الحجز!</h2>
+      <p id="success-msg">موعدك محجوز، بنتظرك!</p>
+      <div class="success-points" id="success-points"></div>
+      <button class="btn-primary full" onclick="closeModal()">حسناً، انتظري الموافقة</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- ======= STYLIST DASHBOARD ======= -->
+  <div id="screen-stylist" class="screen">
+
+    <!-- ---- SALON TAB ---- -->
+    <div id="stab-salon" class="tab active">
+      <div class="home-header">
+        <div class="header-top">
+          <div class="header-greeting">
+            <p class="greeting-small">لوحة التحكم 💅</p>
+            <h2 id="st-salon-name">صالوني</h2>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="notif-btn" onclick="showNotifications()">🔔<span id="st-notif-badge" class="badge hidden"></span></button>
+            <button class="notif-btn" onclick="stLogout()" style="font-size:16px" title="تسجيل الخروج">🚪</button>
+          </div>
+        </div>
+      </div>
+      <div class="home-content" id="st-salon-content">
+        <div id="st-no-salon" class="hidden">
+          <div class="empty-state" style="padding:40px 20px">
+            <div class="empty-icon">🏠</div>
+            <h3>لم تُسجّلي صالونك بعد</h3>
+            <p>أضيفي تفاصيل صالونك لتبدأ باستقبال الحجوزات</p>
+            <button class="btn-primary" onclick="showCreateSalonForm()">+ أضيفي صالونك</button>
+          </div>
+        </div>
+        <div id="st-salon-info">
+          <div class="salon-mgmt-card" id="st-salon-header-card">
+            <div class="salon-mgmt-emoji" id="st-cover-emoji">💅</div>
+            <div class="salon-mgmt-details">
+              <h3 id="st-sname">-</h3>
+              <p id="st-scity">-</p>
+              <p id="st-saddress" style="font-size:12px;color:var(--gray)"></p>
+            </div>
+            <button class="btn-icon-edit" onclick="showEditSalonForm()">✏️</button>
+          </div>
+
+          <!-- Hours -->
+          <div class="mgmt-section">
+            <div class="mgmt-section-header">
+              <h4>مواعيد الدوام ⏰</h4>
+              <button class="btn-sm btn-sm-primary" onclick="showHoursForm()">تعديل</button>
+            </div>
+            <div id="st-hours-list" class="hours-list"></div>
+          </div>
+
+          <!-- Photos -->
+          <div class="mgmt-section">
+            <div class="mgmt-section-header">
+              <h4>صور الصالون 📸</h4>
+              <label class="btn-sm btn-sm-primary" style="cursor:pointer">
+                + رفع
+                <input type="file" id="salon-media-input" accept="image/*,video/mp4,video/webm" style="display:none" onchange="uploadSalonMedia(this)">
+              </label>
+            </div>
+            <div class="media-hint">حتى 4 صور + فيديو واحد • اضغطي على صورة لتعيينها غلافاً</div>
+            <div id="st-media-grid" class="media-grid"></div>
+          </div>
+
+          <!-- Services -->
+          <div class="mgmt-section">
+            <div class="mgmt-section-header">
+              <h4>الخدمات 💆</h4>
+              <button class="btn-sm btn-sm-primary" onclick="showAddServiceForm()">+ إضافة</button>
+            </div>
+            <div id="st-services-list" class="services-mgmt-list"></div>
+          </div>
+
+          <!-- Block Slots -->
+          <div class="mgmt-section">
+            <div class="mgmt-section-header">
+              <h4>حجب المواعيد 🔒</h4>
+              <button class="btn-sm btn-sm-primary" onclick="showBlockSlotForm()">+ حجب وقت</button>
+            </div>
+            <div class="media-hint">أغلقي وقتاً محدداً ليتوقف الحجز فيه</div>
+            <div id="st-blocked-list"></div>
+          </div>
+        </div>
+        <div style="height:90px"></div>
+      </div>
+    </div>
+
+    <!-- ---- TEAM TAB ---- -->
+    <div id="stab-team" class="tab">
+      <div class="page-header">
+        <h2>فريق الكوفيرات 👩‍🎨</h2>
+        <button class="btn-sm btn-sm-primary" onclick="showAddStylistForm()">+ إضافة</button>
+      </div>
+      <div id="st-stylists-list" class="team-list"></div>
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- ---- BOOKINGS TAB ---- -->
+    <div id="stab-bookings" class="tab">
+      <div class="page-header">
+        <h2>الحجوزات 📅</h2>
+      </div>
+      <div class="st-booking-filter-bar">
+        <button class="btab active" data-filter="pending" onclick="stFilterBookings('pending',this)">⏳ بانتظار</button>
+        <button class="btab" data-filter="confirmed" onclick="stFilterBookings('confirmed',this)">✅ مؤكدة</button>
+        <button class="btab" data-filter="all" onclick="stFilterBookings('all',this)">الكل</button>
+        <button class="btab" data-filter="mine" onclick="stFilterBookings('mine',this)">حجوزاتي</button>
+      </div>
+      <div id="st-bookings-list" class="bookings-list"></div>
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- ---- MESSAGES TAB ---- -->
+    <div id="stab-chat" class="tab">
+      <div class="page-header"><h2>الرسائل 💬</h2></div>
+      <div id="st-conversations-list" class="conversations-list"></div>
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- ---- PROFILE TAB ---- -->
+    <div id="stab-profile" class="tab">
+      <div class="profile-header-bg">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="st-profile-avatar">م</div>
+          <div class="profile-tier-badge" id="st-profile-role-badge">كوفيرة</div>
+        </div>
+        <h2 id="st-profile-name">-</h2>
+        <p id="st-profile-phone">-</p>
+      </div>
+
+      <div class="profile-menu" style="margin-top:16px">
+        <div class="profile-menu-item" onclick="stShowEditProfile()">
+          <span class="menu-icon">✏️</span>
+          <div class="menu-text">
+            <span>تعديل المعلومات الشخصية</span>
+            <span class="menu-sub">الاسم، رقم الهاتف</span>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="showNotifications()">
+          <span class="menu-icon">🔔</span>
+          <div class="menu-text">
+            <span>الإشعارات</span>
+            <span class="menu-sub">إشعارات الحجوزات والرسائل</span>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="stShowStats()">
+          <span class="menu-icon">📊</span>
+          <div class="menu-text">
+            <span>إحصائياتي</span>
+            <span class="menu-sub">الحجوزات والتقييمات</span>
+          </div>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" style="border-top:2px solid var(--gray-light);margin-top:8px" onclick="stLogout()">
+          <span class="menu-icon">🚪</span>
+          <div class="menu-text">
+            <span style="color:#e74c3c">تسجيل الخروج</span>
+          </div>
+          <span class="menu-arrow" style="color:#e74c3c">›</span>
+        </div>
+      </div>
+
+      <!-- Stats Panel (hidden by default) -->
+      <div id="st-stats-panel" class="hidden" style="margin:16px">
+        <div class="mgmt-section-header" style="margin-bottom:12px"><h4>📊 إحصائياتي</h4></div>
+        <div id="st-stats-content"></div>
+      </div>
+
+      <!-- Edit Profile Form -->
+      <div id="st-edit-profile-panel" class="hidden" style="margin:16px">
+        <div class="mgmt-section-header" style="margin-bottom:12px"><h4>✏️ تعديل المعلومات</h4></div>
+        <div class="form-group"><label>الاسم</label><input id="st-edit-name" type="text"></div>
+        <div class="form-group"><label>كلمة المرور الجديدة (اتركها فارغة إذا لا تريدين التغيير)</label><input id="st-edit-pass" type="password" placeholder="كلمة مرور جديدة..."></div>
+        <button class="btn-primary full" onclick="stSaveProfile()">حفظ التغييرات</button>
+      </div>
+
+      <div style="height:90px"></div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" onclick="stSwitchTab('salon',this)">
+        <span class="nav-icon">🏠</span><span class="nav-label">صالوني</span>
+      </button>
+      <button class="nav-btn" onclick="stSwitchTab('team',this)">
+        <span class="nav-icon">👩‍🎨</span><span class="nav-label">الفريق</span>
+      </button>
+      <button class="nav-btn" onclick="stSwitchTab('bookings',this)">
+        <span class="nav-icon">📅</span><span class="nav-label">الحجوزات</span>
+      </button>
+      <button class="nav-btn" onclick="stSwitchTab('chat',this)" style="position:relative">
+        <span class="nav-icon">💬<span id="st-chat-badge" class="nav-badge hidden"></span></span><span class="nav-label">الرسائل</span>
+      </button>
+      <button class="nav-btn" onclick="stSwitchTab('profile',this)">
+        <span class="nav-icon">👤</span><span class="nav-label">حسابي</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ======= BLOCK SLOT MODAL ======= -->
+  <div id="modal-block-slot" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>🔒 حجب وقت</h3>
+      <div class="form-group">
+        <label>الكوفيرة</label>
+        <select id="bs-stylist">
+          <option value="">اختاري الكوفيرة...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>التاريخ</label>
+        <input type="date" id="bs-date">
+      </div>
+      <div class="form-group">
+        <label>من الساعة</label>
+        <input type="time" id="bs-start">
+      </div>
+      <div class="form-group">
+        <label>إلى الساعة</label>
+        <input type="time" id="bs-end">
+      </div>
+      <div class="form-group">
+        <label>السبب (اختياري)</label>
+        <input type="text" id="bs-reason" placeholder="مثال: مشوار شخصي، راحة...">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModalById('modal-block-slot')">إلغاء</button>
+        <button class="btn-primary" onclick="saveBlockedSlot()">حجب الوقت 🔒</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= MODALS STYLIST ======= -->
+
+  <!-- Create/Edit Salon Modal -->
+  <div id="modal-salon-form" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 id="salon-form-title">إضافة صالون</h3>
+      <div class="form-group"><label>اسم الصالون *</label><input id="sf-name" type="text" placeholder="مثال: صالون غلامورا"></div>
+      <div class="form-group"><label>المدينة *</label><input id="sf-city" type="text" placeholder="رام الله، نابلس..."></div>
+      <div class="form-group"><label>العنوان *</label><input id="sf-address" type="text" placeholder="شارع..."></div>
+      <div class="form-group"><label>رقم الهاتف</label><input id="sf-phone" type="tel" placeholder="05xxxxxxxx"></div>
+      <div class="form-group"><label>وصف الصالون</label><textarea id="sf-desc" rows="3" placeholder="اكتبي وصفاً مختصراً..."></textarea></div>
+      <div class="form-group">
+        <label>أيقونة الصالون</label>
+        <div class="emoji-picker">
+          <span class="ep-item active" onclick="selectSalonEmoji(this,'💅')">💅</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'✨')">✨</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'💎')">💎</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'🌸')">🌸</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'👑')">👑</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'🌺')">🌺</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'🦋')">🦋</span>
+          <span class="ep-item" onclick="selectSalonEmoji(this,'🌟')">🌟</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModalById('modal-salon-form')">إلغاء</button>
+        <button class="btn-primary" onclick="saveSalon()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Service Modal -->
+  <div id="modal-service-form" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 id="service-form-title">إضافة خدمة</h3>
+      <input type="hidden" id="svc-edit-id">
+      <div class="form-group"><label>اسم الخدمة *</label><input id="svc-name" type="text" placeholder="مثال: بالياج"></div>
+      <div class="form-group">
+        <label>التصنيف *</label>
+        <select id="svc-category">
+          <option value="صبغ الشعر">🎨 صبغ الشعر</option>
+          <option value="قص">✂️ قص</option>
+          <option value="علاجات">💆 علاجات</option>
+          <option value="مكياج">💄 مكياج</option>
+          <option value="أظافر">💅 أظافر</option>
+          <option value="تصفيف">👑 تصفيف</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>السعر (₪) *</label><input id="svc-price" type="number" placeholder="150"></div>
+        <div class="form-group"><label>المدة (دقيقة) *</label><input id="svc-duration" type="number" placeholder="60"></div>
+      </div>
+      <div class="form-group"><label>وصف الخدمة</label><textarea id="svc-desc" rows="2" placeholder="وصف مختصر..."></textarea></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModalById('modal-service-form')">إلغاء</button>
+        <button class="btn-primary" onclick="saveService()">حفظ الخدمة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Stylist Modal -->
+  <div id="modal-stylist-form" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>إضافة كوفيرة</h3>
+      <div class="form-group"><label>الاسم *</label><input id="stf-name" type="text" placeholder="اسم الكوفيرة"></div>
+      <div class="form-group"><label>رقم الهاتف *</label><input id="stf-phone" type="tel" placeholder="05xxxxxxxx"></div>
+      <div class="form-group"><label>البريد الإلكتروني</label><input id="stf-email" type="email" placeholder="اختياري"></div>
+      <div class="form-group"><label>سنوات الخبرة</label><input id="stf-exp" type="number" placeholder="3" min="0"></div>
+      <div class="form-group"><label>نبذة عنها</label><textarea id="stf-bio" rows="2" placeholder="متخصصة في..."></textarea></div>
+      <div class="form-group">
+        <label>التخصصات</label>
+        <div class="spec-chips">
+          <span class="spec-chip" onclick="toggleSpec(this,'بالياج')">بالياج</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'أومبري')">أومبري</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'كيراتين')">كيراتين</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'قص')">قص</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'مكياج')">مكياج</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'تصفيف')">تصفيف</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'أظافر')">أظافر</span>
+          <span class="spec-chip" onclick="toggleSpec(this,'شعر كيرلي')">شعر كيرلي</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModalById('modal-stylist-form')">إلغاء</button>
+        <button class="btn-primary" onclick="saveStylist()">إضافة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hours Form Modal -->
+  <div id="modal-hours-form" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>مواعيد دوام الصالون ⏰</h3>
+      <div id="hours-form-rows"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModalById('modal-hours-form')">إلغاء</button>
+        <button class="btn-primary" onclick="saveHours()">حفظ المواعيد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stylist Availability Modal -->
+  <div id="modal-avail-form" class="modal-overlay hidden">
+    <div class="modal-box" style="max-height:85vh;overflow-y:auto;padding:20px 16px">
+      <h3 id="avail-form-title" style="margin-bottom:16px;font-size:17px">مواعيد دوام الكوفيرة ⏰</h3>
+      <p style="font-size:12px;color:var(--gray);margin-bottom:14px">يمكنك تفعيل شيفتين لكل يوم (صباحي + مسائي)</p>
+      <input type="hidden" id="avail-stylist-id">
+      <div id="avail-form-rows"></div>
+      <div class="modal-actions" style="position:sticky;bottom:0;background:white;padding-top:12px;margin-top:8px">
+        <button class="btn-secondary" onclick="closeModalById('modal-avail-form')">إلغاء</button>
+        <button class="btn-primary" onclick="saveAvailability()">حفظ المواعيد</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<!-- Firebase SDK for Push Notifications -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+<script src="js/firebase-notifications.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/stylist-dashboard.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
+</body>
+</html>
