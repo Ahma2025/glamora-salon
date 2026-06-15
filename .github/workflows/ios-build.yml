@@ -25,19 +25,13 @@ jobs:
       - name: Sync Capacitor iOS
         run: npx cap sync ios
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: false
-          working-directory: ios/App
-
-      - name: Install Gems & CocoaPods
-        working-directory: ios/App
+      - name: Install Fastlane & CocoaPods
         run: |
-          gem install bundler --no-document
-          bundle install
-          bundle exec pod install
+          sudo gem install fastlane cocoapods --no-document
+
+      - name: Install CocoaPods dependencies
+        working-directory: ios/App
+        run: pod install
 
       - name: Build & Upload to TestFlight
         working-directory: ios/App
@@ -50,4 +44,4 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           GITHUB_ACTOR: ${{ github.actor }}
-        run: bundle exec fastlane beta
+        run: fastlane beta
