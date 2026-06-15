@@ -1,0 +1,3 @@
+app_identifier("com.glamora.salon")
+apple_id(ENV["APPLE_ID"])
+team_id("RTYG6CS9G2")

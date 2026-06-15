@@ -1,0 +1,47 @@
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    # Setup API key for App Store Connect
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["ASC_KEY_BASE64"]),
+      is_key_content_base64: false,
+      duration: 1200,
+      in_house: false
+    )
+
+    # Sync certificates and provisioning profiles automatically
+    match(
+      type: "appstore",
+      app_identifier: "com.glamora.salon",
+      git_url: ENV["MATCH_GIT_URL"],
+      git_basic_authorization: Base64.strict_encode64("#{ENV['GITHUB_ACTOR']}:#{ENV['MATCH_GIT_TOKEN']}"),
+      readonly: false,
+      api_key: api_key
+    )
+
+    # Build the app
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.glamora.salon" => "match AppStore com.glamora.salon"
+        }
+      }
+    )
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+end
