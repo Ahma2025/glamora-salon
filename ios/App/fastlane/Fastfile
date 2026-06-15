@@ -30,7 +30,10 @@ platform :ios do
       scheme: "App",
       configuration: "Release",
       export_method: "app-store",
+      xcargs: "DEVELOPMENT_TEAM=RTYG6CS9G2 CODE_SIGN_STYLE=Manual",
       export_options: {
+        method: "app-store",
+        teamID: "RTYG6CS9G2",
         provisioningProfiles: {
           "com.glamora.salon" => "match AppStore com.glamora.salon"
         }
