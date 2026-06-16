@@ -24,15 +24,25 @@ platform :ios do
       in_house: false
     )
 
-    # Create app in App Store Connect if it doesn't exist yet
-    produce(
-      app_identifier: "com.glamora.salon",
-      app_name: "Glamora Salon",
-      language: "Arabic",
-      app_version: "1.0",
-      sku: "glamorasalon2025",
-      skip_devcenter: true
-    )
+    # Create app in App Store Connect if it doesn't exist yet (using Spaceship with API key)
+    require 'spaceship'
+    token = Spaceship::ConnectAPI::Token.from(hash: api_key)
+    Spaceship::ConnectAPI.token = token
+    existing_app = Spaceship::ConnectAPI::App.find("com.glamora.salon")
+    if existing_app.nil?
+      UI.message("Creating app 'Glamora Salon' in App Store Connect...")
+      Spaceship::ConnectAPI::App.create(
+        name: "Glamora Salon",
+        version_string: "1.0",
+        sku: "glamorasalon2025",
+        primary_locale: "ar-SA",
+        bundle_id: "com.glamora.salon",
+        platforms: ["IOS"]
+      )
+      UI.success("App created successfully!")
+    else
+      UI.message("App already exists in App Store Connect, skipping create.")
+    end
 
     # Sync certificates and provisioning profiles
     match(
