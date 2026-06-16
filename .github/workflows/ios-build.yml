@@ -44,6 +44,4 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           GITHUB_ACTOR: ${{ github.actor }}
-          MATCH_KEYCHAIN_NAME: fastlane_tmp_keychain
-          MATCH_KEYCHAIN_PASSWORD: ""
         run: fastlane beta

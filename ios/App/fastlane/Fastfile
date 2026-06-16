@@ -4,8 +4,15 @@ platform :ios do
 
   desc "Build and upload to TestFlight"
   lane :beta do
-    # Setup CI keychain so codesign doesn't hang waiting for interactive password
-    setup_ci(force: true)
+    # Create and unlock keychain for CI so codesign doesn't hang
+    create_keychain(
+      name: "build.keychain",
+      password: "glamora123",
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
+    )
 
     # Setup API key for App Store Connect
     api_key = app_store_connect_api_key(
@@ -17,14 +24,16 @@ platform :ios do
       in_house: false
     )
 
-    # Sync certificates and provisioning profiles automatically
+    # Sync certificates and provisioning profiles
     match(
       type: "appstore",
       app_identifier: "com.glamora.salon",
       git_url: ENV["MATCH_GIT_URL"],
       git_basic_authorization: Base64.strict_encode64("#{ENV['GITHUB_ACTOR']}:#{ENV['MATCH_GIT_TOKEN']}"),
       readonly: false,
-      api_key: api_key
+      api_key: api_key,
+      keychain_name: "build.keychain",
+      keychain_password: "glamora123"
     )
 
     # Build the app
