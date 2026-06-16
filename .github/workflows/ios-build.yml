@@ -45,3 +45,12 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           GITHUB_ACTOR: ${{ github.actor }}
         run: fastlane beta
+
+      - name: Save IPA as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Glamora-Salon-IPA
+          path: ios/App/App.ipa
+          if-no-files-found: ignore
+          retention-days: 30
