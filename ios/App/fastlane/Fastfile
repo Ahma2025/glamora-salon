@@ -4,6 +4,9 @@ platform :ios do
 
   desc "Build and upload to TestFlight"
   lane :beta do
+    # Setup CI keychain so codesign doesn't hang waiting for interactive password
+    setup_ci(force: true)
+
     # Setup API key for App Store Connect
     api_key = app_store_connect_api_key(
       key_id: ENV["ASC_KEY_ID"],
@@ -30,7 +33,6 @@ platform :ios do
       scheme: "App",
       configuration: "Release",
       export_method: "app-store",
-      xcargs: "DEVELOPMENT_TEAM=RTYG6CS9G2 CODE_SIGN_STYLE=Manual",
       export_options: {
         method: "app-store",
         teamID: "RTYG6CS9G2",

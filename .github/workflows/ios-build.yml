@@ -9,6 +9,7 @@ jobs:
   build-ios:
     name: Build iOS App
     runs-on: macos-latest
+    timeout-minutes: 60
 
     steps:
       - name: Checkout code
@@ -26,8 +27,7 @@ jobs:
         run: npx cap sync ios
 
       - name: Install Fastlane & CocoaPods
-        run: |
-          sudo gem install fastlane cocoapods --no-document
+        run: sudo gem install fastlane cocoapods --no-document
 
       - name: Install CocoaPods dependencies
         working-directory: ios/App
@@ -44,4 +44,6 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           GITHUB_ACTOR: ${{ github.actor }}
+          MATCH_KEYCHAIN_NAME: fastlane_tmp_keychain
+          MATCH_KEYCHAIN_PASSWORD: ""
         run: fastlane beta
