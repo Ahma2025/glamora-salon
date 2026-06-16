@@ -24,6 +24,18 @@ platform :ios do
       in_house: false
     )
 
+    # Create app in App Store Connect if it doesn't exist yet
+    produce(
+      app_identifier: "com.glamora.salon",
+      app_name: "Glamora Salon",
+      language: "Arabic",
+      app_version: "1.0",
+      sku: "glamorasalon2025",
+      api_key: api_key,
+      skip_itc: false,
+      skip_devcenter: true
+    )
+
     # Sync certificates and provisioning profiles
     match(
       type: "appstore",
