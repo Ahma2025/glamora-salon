@@ -8,12 +8,21 @@ on:
 jobs:
   build-ios:
     name: Build iOS App
-    runs-on: macos-latest
+    runs-on: macos-16
     timeout-minutes: 60
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: List available Xcode versions
+        run: ls /Applications/ | grep Xcode || true
+
+      - name: Select latest Xcode
+        run: |
+          XCODE=$(ls /Applications/ | grep "^Xcode" | sort -V | tail -1)
+          echo "Using $XCODE"
+          sudo xcode-select -s /Applications/$XCODE/Contents/Developer
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
