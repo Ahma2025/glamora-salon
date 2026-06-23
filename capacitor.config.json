@@ -1,20 +1,22 @@
 {
-  "appId": "com.glamora.salon",
-  "appName": "Glamora",
+  "appId": "com.velour.salon",
+  "appName": "Velour",
   "webDir": "frontend",
   "bundledWebRuntime": false,
   "server": {
-    "url": "http://192.168.1.75:3000",
-    "cleartext": true
+    "cleartext": false
   },
   "ios": {
-    "contentInset": "always",
+    "contentInset": "never",
     "limitsNavigationsToAppBoundDomains": false,
     "backgroundColor": "#1A0A0F"
   },
   "plugins": {
+    "CapacitorHttp": {
+      "enabled": false
+    },
     "SplashScreen": {
-      "launchShowDuration": 2500,
+      "launchShowDuration": 0,
       "backgroundColor": "#1A0A0F",
       "showSpinner": false,
       "androidSpinnerStyle": "small",
@@ -38,8 +40,8 @@
       "importance": "high"
     },
     "LocalNotifications": {
-      "smallIcon": "ic_stat_icon_config_sample",
-      "iconColor": "#C9728A",
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#6B0F2B",
       "sound": "beep.wav"
     }
   }

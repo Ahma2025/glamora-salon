@@ -63,16 +63,22 @@ async function sendPushNotification(fcmToken, title, body, data = {}) {
           priority: 'high',
           notification: {
             sound: 'default',
-            channel_id: 'glamora_bookings',
+            channel_id: 'glamora_bookings_v3',
             color: '#C9728A'
           }
         },
         apns: {
+          headers: {
+            'apns-priority': '10',
+            'apns-push-type': 'alert'
+          },
           payload: {
             aps: {
+              alert: { title, body },
               sound: 'default',
               badge: 1,
-              'content-available': 1
+              'content-available': 1,
+              'mutable-content': 1
             }
           }
         },

@@ -66,26 +66,29 @@ function renderSalonHeader() {
   const emoji = stSalonData.cover_emoji || '💅';
   document.getElementById('st-cover-emoji').textContent = emoji;
   document.getElementById('st-sname').textContent = stSalonData.name;
-  document.getElementById('st-scity').textContent = '📍 ' + stSalonData.city;
+  document.getElementById('st-scity').textContent = stSalonData.city;
   document.getElementById('st-saddress').textContent = stSalonData.address;
   document.getElementById('st-salon-name').textContent = stSalonData.name;
+  const locEl = document.getElementById('st-location-status');
+  if (locEl) {
+    locEl.textContent = (stSalonData.latitude && stSalonData.longitude)
+      ? `✅ الموقع محدد على الخريطة`
+      : '⚠️ لم يتم تحديد الموقع بعد — اضغطي على "تحديد الموقع"';
+  }
 }
 
 // ===== HOURS =====
 function renderHours() {
   const hours = stSalonData?.hours || [];
-  if (!hours.length) {
-    document.getElementById('st-hours-list').innerHTML = '<div class="hour-row"><span class="hour-day">لم تُضبط بعد</span></div>';
+  const closedDays = hours.filter(h => h.is_closed).map(h => DAYS_AR[h.day_of_week]);
+  const el = document.getElementById('st-hours-list');
+  if (!closedDays.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--gray)">لا يوجد أيام إجازة — الصالون مفتوح كل الأيام</div>';
     return;
   }
-  document.getElementById('st-hours-list').innerHTML = hours.map(h => `
-    <div class="hour-row">
-      <span class="hour-day">${DAYS_AR[h.day_of_week]}</span>
-      ${h.is_closed
-        ? '<span class="hour-closed">مغلق</span>'
-        : `<span class="hour-time">${h.open_time} – ${h.close_time}</span>`}
-    </div>
-  `).join('');
+  el.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px">' +
+    closedDays.map(d => `<span class="off-day-chip">${d}</span>`).join('') +
+    '</div>';
 }
 
 // ===== SERVICES =====
@@ -210,12 +213,12 @@ function buildStBookingCard(b) {
       </div>
       ${b.status === 'pending' ? `
         <div class="st-bk-actions">
-          <button class="btn-accept" onclick="stUpdateBooking(${b.id},'confirmed')">✅ قبول الحجز</button>
-          <button class="btn-reject" onclick="stUpdateBooking(${b.id},'rejected')">❌ رفض</button>
+          <button class="btn-accept" onclick="stUpdateBooking(${b.id},'confirmed')">قبول الحجز</button>
+          <button class="btn-reject" onclick="stUpdateBooking(${b.id},'rejected')">رفض</button>
         </div>` : ''}
       ${b.status === 'confirmed' ? `
         <div class="st-bk-actions">
-          <button class="btn-chat-sm" onclick="openChatWith(${b.client_id || b.id}, '${b.client_name}')">💬 تواصل</button>
+          <button class="btn-chat-sm" onclick="openChatWith(${b.client_id || b.id}, '${b.client_name}')">تواصل</button>
           <button class="btn-reject" onclick="stUpdateBooking(${b.id},'cancelled')">إلغاء الحجز</button>
         </div>` : ''}
     </div>
@@ -223,7 +226,7 @@ function buildStBookingCard(b) {
 }
 
 async function stUpdateBooking(id, status) {
-  const labels = { confirmed: '✅ تم قبول الحجز وإشعار الزبونة', rejected: '❌ تم رفض الحجز', cancelled: '🗑️ تم إلغاء الحجز' };
+  const labels = { confirmed: 'تم قبول الحجز وإشعار الزبونة', rejected: 'تم رفض الحجز', cancelled: 'تم إلغاء الحجز' };
   try {
     await Api.stylistDash.updateBooking(id, status);
     showToast(labels[status] || 'تم التحديث');
@@ -231,7 +234,7 @@ async function stUpdateBooking(id, status) {
     const activeBtn = document.querySelector('#stab-bookings .btab.active');
     const filter = activeBtn?.dataset?.filter || 'pending';
     loadStBookings(filter);
-  } catch (e) { showToast('❌ حدث خطأ'); }
+  } catch (e) { showToast('حدث خطأ'); }
 }
 
 // ===== CONVERSATIONS =====
@@ -296,59 +299,79 @@ async function saveSalon() {
   const address = document.getElementById('sf-address').value.trim();
   const phone = document.getElementById('sf-phone').value.trim();
   const description = document.getElementById('sf-desc').value.trim();
-  if (!name || !city || !address) { showToast('⚠️ الاسم والمدينة والعنوان مطلوبة'); return; }
+  if (!name || !city || !address) { showToast('الاسم والمدينة والعنوان مطلوبة'); return; }
 
   try {
+    let salonId = stEditingSalonId;
     if (stEditingSalonId) {
       await Api.stylistDash.updateSalon(stEditingSalonId, { name, city, address, phone, description, cover_emoji: stSelectedEmoji });
-      showToast('✅ تم تحديث الصالون');
+      showToast('تم تحديث الصالون');
     } else {
-      await Api.stylistDash.createSalon({ name, city, address, phone, description, cover_emoji: stSelectedEmoji });
-      showToast('✅ تم إنشاء الصالون');
+      const created = await Api.stylistDash.createSalon({ name, city, address, phone, description, cover_emoji: stSelectedEmoji });
+      salonId = created?.id;
+      showToast('تم إنشاء الصالون');
+    }
+    if (typeof pendingSalonLocation !== 'undefined' && pendingSalonLocation && salonId) {
+      await Api.salons.updateLocation(salonId, pendingSalonLocation.lat, pendingSalonLocation.lng);
+      pendingSalonLocation = null;
     }
     closeModalById('modal-salon-form');
     await loadStylistDashboard();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 // ===== HOURS FORM =====
 function showHoursForm() {
   const existing = stSalonData?.hours || [];
   const rows = document.getElementById('hours-form-rows');
-  rows.innerHTML = DAYS_AR.map((day, i) => {
-    const h = existing.find(e => e.day_of_week === i);
-    return `
-      <div class="hours-form-row">
-        <span class="hours-form-day">${day}</span>
-        <input type="time" id="hf-open-${i}" value="${h?.open_time || '09:00'}" ${h?.is_closed ? 'disabled' : ''}>
-        <span style="font-size:12px">–</span>
-        <input type="time" id="hf-close-${i}" value="${h?.close_time || '20:00'}" ${h?.is_closed ? 'disabled' : ''}>
-        <input type="checkbox" id="hf-closed-${i}" ${h?.is_closed ? 'checked' : ''} onchange="toggleHourRow(${i},this.checked)">
-        <span class="hours-closed-label">إجازة</span>
-      </div>
-    `;
-  }).join('');
+  rows.innerHTML = `
+    <p style="font-size:13px;color:var(--gray);margin-bottom:16px">اختاري أيام إجازة الصالون — الكوفيرات لن تتمكن من الحجز في هذه الأيام</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+    ${DAYS_AR.map((day, i) => {
+      const h = existing.find(e => e.day_of_week === i);
+      const isOff = h?.is_closed ? 'checked' : '';
+      return `
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--gray-light);cursor:pointer" id="hf-label-${i}">
+          <input type="checkbox" id="hf-closed-${i}" ${isOff} onchange="toggleOffDay(${i},this.checked)" style="width:18px;height:18px;accent-color:var(--primary)">
+          <span style="font-size:15px;font-weight:600">${day}</span>
+          ${h?.is_closed ? '<span class="off-day-chip" id="hf-badge-'+i+'">إجازة</span>' : '<span id="hf-badge-'+i+'"></span>'}
+        </label>
+      `;
+    }).join('')}
+    </div>
+  `;
   document.getElementById('modal-hours-form').classList.remove('hidden');
 }
 
-function toggleHourRow(day, isClosed) {
-  document.getElementById(`hf-open-${day}`).disabled = isClosed;
-  document.getElementById(`hf-close-${day}`).disabled = isClosed;
+function toggleOffDay(i, isOff) {
+  const badge = document.getElementById(`hf-badge-${i}`);
+  const label = document.getElementById(`hf-label-${i}`);
+  if (isOff) {
+    badge.className = 'off-day-chip';
+    badge.textContent = 'إجازة';
+    label.style.borderColor = '#EF4444';
+    label.style.background = '#FEF2F2';
+  } else {
+    badge.className = '';
+    badge.textContent = '';
+    label.style.borderColor = 'var(--gray-light)';
+    label.style.background = '';
+  }
 }
 
 async function saveHours() {
   const hours = DAYS_AR.map((_, i) => ({
     day_of_week: i,
-    open_time: document.getElementById(`hf-open-${i}`).value || '09:00',
-    close_time: document.getElementById(`hf-close-${i}`).value || '20:00',
+    open_time: '09:00',
+    close_time: '20:00',
     is_closed: document.getElementById(`hf-closed-${i}`).checked
   }));
   try {
     await Api.stylistDash.setHours(stSalonData.id, hours);
-    showToast('✅ تم حفظ مواعيد الدوام');
+    showToast('تم حفظ أيام الإجازة');
     closeModalById('modal-hours-form');
     await loadStylistDashboard();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 // ===== SERVICE FORM =====
@@ -383,38 +406,36 @@ async function saveService() {
   const price = document.getElementById('svc-price').value;
   const duration_minutes = document.getElementById('svc-duration').value;
   const description = document.getElementById('svc-desc').value.trim();
-  if (!name_ar || !price || !duration_minutes) { showToast('⚠️ يرجى تعبئة جميع الحقول'); return; }
+  if (!name_ar || !price || !duration_minutes) { showToast('يرجى تعبئة جميع الحقول'); return; }
 
   try {
     if (stEditingServiceId) {
       await Api.stylistDash.editService(stEditingServiceId, { name_ar, category, price, duration_minutes, description });
-      showToast('✅ تم تحديث الخدمة');
+      showToast('تم تحديث الخدمة');
     } else {
       await Api.stylistDash.addService(stSalonData.id, { name_ar, category, price, duration_minutes, description });
-      showToast('✅ تمت إضافة الخدمة');
+      showToast('تمت إضافة الخدمة');
     }
     closeModalById('modal-service-form');
     await loadStylistDashboard();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 async function deleteService(id) {
   if (!confirm('هل تريدين حذف هذه الخدمة؟')) return;
   try {
     await Api.stylistDash.deleteService(id);
-    showToast('🗑️ تم حذف الخدمة');
+    showToast('تم حذف الخدمة');
     await loadStylistDashboard();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 // ===== ADD STYLIST =====
 function showAddStylistForm() {
   document.getElementById('stf-name').value = '';
   document.getElementById('stf-phone').value = '';
-  document.getElementById('stf-email').value = '';
   document.getElementById('stf-exp').value = '';
   document.getElementById('stf-bio').value = '';
-  document.querySelectorAll('.spec-chip').forEach(c => c.classList.remove('selected'));
   document.getElementById('modal-stylist-form').classList.remove('hidden');
 }
 
@@ -423,26 +444,24 @@ function toggleSpec(el, spec) {
 }
 
 async function saveStylist() {
-  if (!stSalonData) { showToast('⚠️ يجب إنشاء الصالون أولاً'); return; }
+  if (!stSalonData) { showToast('يجب إنشاء الصالون أولاً'); return; }
   const name = document.getElementById('stf-name').value.trim();
   const phone = document.getElementById('stf-phone').value.trim();
-  const email = document.getElementById('stf-email').value.trim();
   const experience_years = parseInt(document.getElementById('stf-exp').value) || 1;
   const bio = document.getElementById('stf-bio').value.trim();
-  const specialties = [...document.querySelectorAll('.spec-chip.selected')].map(c => c.textContent.trim());
-  if (!name || !phone) { showToast('⚠️ الاسم والهاتف مطلوبان'); return; }
+  if (!name || !phone) { showToast('الاسم والهاتف مطلوبان'); return; }
 
   const btn = document.querySelector('#modal-stylist-form .btn-primary');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري الإضافة...'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'جاري الإضافة...'; }
   try {
-    await Api.stylistDash.addStylist(stSalonData.id, { name, phone, email, bio, specialties, experience_years });
-    showToast('✅ تمت إضافة الكوفيرة - كلمة مرورها الافتراضية: 123456');
+    await Api.stylistDash.addStylist(stSalonData.id, { name, phone, bio, experience_years });
+    showToast('تمت إضافة الكوفيرة - كلمة مرورها الافتراضية: 123456');
     closeModalById('modal-stylist-form');
     await loadStylistDashboard();
     renderTeam();
   } catch (e) {
     console.error('saveStylist error:', e);
-    showToast('❌ ' + e.message);
+    showToast(e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'إضافة'; }
   }
@@ -525,11 +544,11 @@ async function saveAvailability() {
   }));
   try {
     await Api.stylistDash.setAvailability(stAvailStylistId, availability);
-    showToast('✅ تم حفظ مواعيد الدوام');
+    showToast('تم حفظ مواعيد الدوام');
     closeModalById('modal-avail-form');
     await loadStylistDashboard();
     renderTeam();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 // ===== SALON MEDIA =====
@@ -552,8 +571,8 @@ function renderMediaGrid(media) {
     return `
       <div class="media-item ${m.is_cover ? 'media-cover' : ''}" onclick="${isVideo ? '' : `setCoverMedia(${m.id})`}">
         ${isVideo
-          ? `<video src="${m.url}" class="media-thumb" muted></video><div class="media-type-badge">🎬</div>`
-          : `<img src="${m.url}" class="media-thumb">`}
+          ? `<video src="${mediaUrl(m.url)}" class="media-thumb" muted></video><div class="media-type-badge">vid</div>`
+          : `<img src="${mediaUrl(m.url)}" class="media-thumb">`}
         ${m.is_cover ? '<div class="media-cover-badge">غلاف ✓</div>' : ''}
         <button class="media-delete-btn" onclick="event.stopPropagation();deleteMedia(${m.id})">×</button>
       </div>
@@ -577,28 +596,28 @@ async function uploadSalonMedia(input) {
   showToast('⏳ جاري رفع الملف...');
   try {
     const result = await Api.stylistDash.uploadMedia(stSalonData.id, file);
-    if (result.error) { showToast('❌ ' + result.error); return; }
-    showToast('✅ تم رفع الملف');
+    if (result.error) { showToast(result.error); return; }
+    showToast('تم رفع الملف');
     loadSalonMedia();
-  } catch (e) { showToast('❌ فشل الرفع'); }
+  } catch (e) { showToast('فشل الرفع'); }
   input.value = '';
 }
 
 async function setCoverMedia(mediaId) {
   try {
     await Api.stylistDash.setCover(mediaId);
-    showToast('✅ تم تعيين الغلاف');
+    showToast('تم تعيين الغلاف');
     loadSalonMedia();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 async function deleteMedia(mediaId) {
   if (!confirm('حذف هذه الصورة؟')) return;
   try {
     await Api.stylistDash.deleteMedia(mediaId);
-    showToast('✅ تم الحذف');
+    showToast('تم الحذف');
     loadSalonMedia();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 // ===== BLOCKED SLOTS =====
@@ -631,16 +650,16 @@ async function saveBlockedSlot() {
   const end_time = document.getElementById('bs-end').value;
   const reason = document.getElementById('bs-reason').value;
 
-  if (!stylist_id) { showToast('⚠️ اختاري الكوفيرة'); return; }
-  if (!date || !start_time || !end_time) { showToast('⚠️ التاريخ والوقت مطلوبان'); return; }
-  if (start_time >= end_time) { showToast('⚠️ وقت البداية يجب أن يكون قبل وقت النهاية'); return; }
+  if (!stylist_id) { showToast('اختاري الكوفيرة'); return; }
+  if (!date || !start_time || !end_time) { showToast('التاريخ والوقت مطلوبان'); return; }
+  if (start_time >= end_time) { showToast('وقت البداية يجب أن يكون قبل وقت النهاية'); return; }
 
   try {
     await Api.stylistDash.addBlockedSlot({ stylist_id: parseInt(stylist_id), date, start_time, end_time, reason });
-    showToast('🔒 تم حجب الوقت');
+    showToast('تم حجب الوقت');
     closeModalById('modal-block-slot');
     loadBlockedSlots();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 async function loadBlockedSlots() {
@@ -667,9 +686,9 @@ async function loadBlockedSlots() {
 async function unblockSlot(id) {
   try {
     await Api.stylistDash.deleteBlockedSlot(id);
-    showToast('✅ تم فتح الوقت');
+    showToast('تم فتح الوقت');
     loadBlockedSlots();
-  } catch (e) { showToast('❌ ' + e.message); }
+  } catch (e) { showToast(e.message); }
 }
 
 function formatDateAr(d) {
@@ -738,7 +757,7 @@ async function stShowStats() {
 async function stSaveProfile() {
   const name = document.getElementById('st-edit-name').value.trim();
   const newPass = document.getElementById('st-edit-pass').value;
-  if (!name) { showToast('⚠️ الاسم مطلوب'); return; }
+  if (!name) { showToast('الاسم مطلوب'); return; }
 
   try {
     const body = { name };
@@ -752,7 +771,7 @@ async function stSaveProfile() {
       localStorage.setItem('glamora_user', JSON.stringify(user));
     }
 
-    showToast('✅ تم حفظ التغييرات');
+    showToast('تم حفظ التغييرات');
     loadStProfile();
     document.getElementById('st-edit-profile-panel').classList.add('hidden');
   } catch (e) {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "522325560123",
+    "project_id": "glamora-salon-app",
+    "storage_bucket": "glamora-salon-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522325560123:android:03dbf27c61bbdabb76851e",
+        "android_client_info": {
+          "package_name": "com.velour.salon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvc2pdQUtcQcNgq1tR4UshTNqEGfH7C38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

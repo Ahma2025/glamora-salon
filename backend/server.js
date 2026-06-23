@@ -16,6 +16,13 @@ const SECRET = process.env.JWT_SECRET || 'glamora_secret_2024';
 
 app.use(cors());
 app.use(express.json());
+const _logFile = require('path').join(__dirname, 'requests.log');
+require('fs').writeFileSync(_logFile, '');
+app.use((req, res, next) => {
+  const line = `[${new Date().toISOString()}] ${req.method} ${req.path} from ${req.ip}\n`;
+  require('fs').appendFileSync(_logFile, line);
+  next();
+});
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -77,6 +84,22 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {});
+});
+
+app.post('/api/debug-log', (req, res) => {
+  const msg = req.body.msg || '';
+  const line = `[DEBUG ${new Date().toISOString()}] ${msg}\n`;
+  require('fs').appendFileSync(require('path').join(__dirname, 'debug.log'), line);
+  res.json({ ok: true });
+});
+
+app.get('/api/debug-log', (req, res) => {
+  const fs = require('fs');
+  const logPath = require('path').join(__dirname, 'debug.log');
+  const content = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8') : '(no logs yet)';
+  const lines = content.trim().split('\n').slice(-100).join('\n');
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.send(lines);
 });
 
 app.get('*', (req, res) => {

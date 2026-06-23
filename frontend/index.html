@@ -2,19 +2,20 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Glamora | صالون المرأة الفاخر</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Velour | صالون المرأة الفاخر</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#c2185b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Glamora">
+<meta name="apple-mobile-web-app-title" content="Velour">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 
@@ -25,8 +26,8 @@
     <div class="splash-bg"></div>
     <div class="splash-content">
       <div class="splash-logo">
-        <div class="logo-icon">✦</div>
-        <h1 class="logo-text">Glamora</h1>
+        <img class="logo-icon" src="icons/velour-icon.png" alt="Velour">
+        <h1 class="logo-text">Velour</h1>
         <p class="logo-tagline">جمالك، أولويتنا</p>
       </div>
       <div class="splash-loader">
@@ -75,7 +76,7 @@
       <span class="dot" onclick="goToSlide(2)"></span>
     </div>
     <div class="onboard-actions">
-      <button class="btn-primary full" onclick="showScreen('login')">ابدئي رحلتك ✦</button>
+      <button class="btn-primary full" onclick="showScreen('login')">ابدئي رحلتك</button>
       <button class="btn-ghost full" onclick="showScreen('register')">حساب جديد مجاناً</button>
     </div>
   </div>
@@ -84,10 +85,10 @@
   <div id="screen-login" class="screen">
     <div class="auth-header">
       <button class="back-btn" onclick="showScreen('onboard')">←</button>
-      <div class="auth-logo">✦ Glamora</div>
+      <div class="auth-logo">✦ Velour</div>
     </div>
     <div class="auth-body">
-      <h2>أهلاً بك مجدداً 💕</h2>
+      <h2>أهلاً بك مجدداً</h2>
       <p class="auth-sub">سجّلي دخولك للمتابعة</p>
       <div class="form-group">
         <label>رقم الهاتف</label>
@@ -97,31 +98,26 @@
         <label>كلمة المرور</label>
         <div class="input-wrap">
           <input type="password" id="login-pass" placeholder="••••••••" dir="ltr">
-          <button class="eye-btn" onclick="togglePass('login-pass')">👁</button>
+          <button class="eye-btn" onclick="togglePass('login-pass')">◉</button>
         </div>
       </div>
       <div id="login-error" class="error-msg hidden"></div>
       <button class="btn-primary full" onclick="doLogin()">
-        <span id="login-btn-text">دخول ✦</span>
+        <span id="login-btn-text">دخول</span>
         <span id="login-spinner" class="spinner hidden"></span>
       </button>
       <p class="auth-switch">ما عندك حساب؟ <a onclick="showScreen('register')">سجّلي الآن</a></p>
-      <div class="demo-hint">
-        <p>🔑 للتجربة السريعة:</p>
-        <p>زبونة: <strong>0591000001</strong> / <strong>123456</strong></p>
-        <p>كوفيرة: <strong>0591000003</strong> / <strong>123456</strong></p>
       </div>
-    </div>
   </div>
 
   <!-- ======= REGISTER ======= -->
   <div id="screen-register" class="screen">
     <div class="auth-header">
       <button class="back-btn" onclick="showScreen('onboard')">←</button>
-      <div class="auth-logo">✦ Glamora</div>
+      <div class="auth-logo">✦ Velour</div>
     </div>
     <div class="auth-body">
-      <h2>انضمي إلينا 🌸</h2>
+      <h2>انضمي إلينا</h2>
       <p class="auth-sub">أنشئي حسابك وابدئي رحلة الجمال</p>
       <div class="form-group">
         <label>الاسم الكامل</label>
@@ -139,24 +135,24 @@
         <label>كلمة المرور</label>
         <div class="input-wrap">
           <input type="password" id="reg-pass" placeholder="6 أحرف على الأقل" dir="ltr">
-          <button class="eye-btn" onclick="togglePass('reg-pass')">👁</button>
+          <button class="eye-btn" onclick="togglePass('reg-pass')">&#9673;</button>
         </div>
       </div>
       <div class="form-group">
         <label>نوع الحساب</label>
         <div class="role-select">
           <div class="role-card active" data-role="client" onclick="selectRole('client')">
-            <span class="role-icon">💅</span>
+            <span class="role-icon">◈</span>
             <span>زبونة</span>
           </div>
           <div class="role-card" data-role="stylist" onclick="selectRole('stylist')">
-            <span class="role-icon">✂️</span>
+            <span class="role-icon">✦</span>
             <span>كوفيرة</span>
           </div>
         </div>
       </div>
       <div id="reg-error" class="error-msg hidden"></div>
-      <button class="btn-primary full" onclick="doRegister()">إنشاء حساب مجاناً ✦</button>
+      <button class="btn-primary full" onclick="doRegister()">إنشاء حساب مجاناً</button>
       <p class="auth-switch">عندك حساب؟ <a onclick="showScreen('login')">دخول</a></p>
     </div>
   </div>
@@ -169,7 +165,7 @@
       <div class="home-header">
         <div class="header-top">
           <div class="header-greeting">
-            <p class="greeting-small">مرحباً بك 💕</p>
+            <p class="greeting-small">مرحباً بك</p>
             <h2 id="home-user-name">سارة</h2>
           </div>
           <button class="notif-btn" onclick="showNotifications()">
@@ -188,6 +184,8 @@
         <div class="section">
           <div class="cats-scroll">
             <div class="cat-chip active" onclick="filterCategory(this, '')">الكل</div>
+            <div class="cat-chip" onclick="openNearestScreen()">📍 الأقرب إليك</div>
+            <div class="cat-chip" onclick="filterTopRated(this)">⭐ الأعلى تقييماً</div>
             <div class="cat-chip" onclick="filterCategory(this, 'صبغ الشعر')">🎨 صبغ</div>
             <div class="cat-chip" onclick="filterCategory(this, 'قص')">✂️ قص</div>
             <div class="cat-chip" onclick="filterCategory(this, 'علاجات')">💆 علاجات</div>
@@ -200,17 +198,9 @@
         <!-- Featured -->
         <div class="section">
           <div class="section-header">
-            <h3>صالونات مميزة ✨</h3>
+            <h3>صالونات مميزة</h3>
           </div>
           <div class="featured-scroll" id="featured-salons"></div>
-        </div>
-
-        <!-- Top Stylists -->
-        <div class="section">
-          <div class="section-header">
-            <h3>الكوفيرات الأعلى تقييماً ⭐</h3>
-          </div>
-          <div class="stylists-grid" id="top-stylists"></div>
         </div>
 
         <!-- All Salons -->
@@ -228,7 +218,7 @@
     <!-- ---- BOOKINGS TAB ---- -->
     <div id="tab-bookings" class="tab">
       <div class="page-header">
-        <h2>حجوزاتي 📅</h2>
+        <h2>حجوزاتي</h2>
         <div class="booking-tabs">
           <button class="btab active" onclick="filterBookings('upcoming', this)">القادمة</button>
           <button class="btab" onclick="filterBookings('past', this)">السابقة</button>
@@ -241,7 +231,7 @@
     <!-- ---- CHAT TAB ---- -->
     <div id="tab-chat" class="tab">
       <div class="page-header">
-        <h2>رسائلي 💬</h2>
+        <h2>رسائلي</h2>
       </div>
       <div id="conversations-list" class="conversations-list"></div>
       <div style="height:90px"></div>
@@ -358,6 +348,28 @@
       <div id="salon-stylists-list" class="salon-stylists"></div>
     </div>
     <div id="salon-tab-reviews" class="salon-tab-content">
+      <!-- Rating Widget -->
+      <div id="salon-rating-widget" class="rating-widget">
+        <div class="rating-summary">
+          <div class="rating-big-number" id="rw-avg">0</div>
+          <div>
+            <div class="rating-stars-display" id="rw-stars-display"></div>
+            <div class="rating-count" id="rw-count">لا توجد تقييمات بعد</div>
+          </div>
+        </div>
+        <div class="rating-input-section">
+          <p class="rating-prompt">قيّمي هذا الصالون</p>
+          <div class="star-input" id="star-input">
+            <span class="star-btn" data-v="1" onclick="setSalonRating(1)">★</span>
+            <span class="star-btn" data-v="2" onclick="setSalonRating(2)">★</span>
+            <span class="star-btn" data-v="3" onclick="setSalonRating(3)">★</span>
+            <span class="star-btn" data-v="4" onclick="setSalonRating(4)">★</span>
+            <span class="star-btn" data-v="5" onclick="setSalonRating(5)">★</span>
+          </div>
+          <textarea id="rating-comment" placeholder="اكتبي تعليقك (اختياري)..." rows="2" class="rating-comment-input"></textarea>
+          <button class="btn-primary rating-submit-btn" onclick="submitSalonRating()">إرسال التقييم</button>
+        </div>
+      </div>
       <div id="salon-reviews-list"></div>
     </div>
     <div id="salon-tab-info" class="salon-tab-content">
@@ -369,8 +381,10 @@
   <!-- ======= BOOKING WIZARD ======= -->
   <div id="screen-booking-wizard" class="screen slide-up">
     <div class="wizard-header">
-      <button class="back-btn" onclick="goBack()">←</button>
-      <h2>احجزي موعدك ✨</h2>
+      <div class="wizard-header-row">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h2>احجزي موعدك</h2>
+      </div>
       <div class="wizard-steps">
         <div class="wstep active" id="ws1">١</div>
         <div class="wstep-line"></div>
@@ -407,7 +421,7 @@
           <label>ملاحظات (اختياري)</label>
           <textarea id="booking-notes" placeholder="أي تفاصيل إضافية للكوفيرة..."></textarea>
         </div>
-        <button class="btn-primary full" onclick="confirmBooking()">تأكيد الحجز 🎉</button>
+        <button class="btn-primary full" onclick="confirmBooking()">تأكيد الحجز</button>
       </div>
     </div>
     <div class="wizard-footer">
@@ -445,7 +459,7 @@
   <div id="screen-notifications" class="screen slide-up">
     <div class="page-header">
       <button class="back-btn" onclick="goBack()">←</button>
-      <h2>الإشعارات 🔔</h2>
+      <h2>الإشعارات</h2>
     </div>
     <div id="notifs-list" class="notifs-list"></div>
   </div>
@@ -454,7 +468,7 @@
   <div id="screen-color-history" class="screen slide-up">
     <div class="page-header">
       <button class="back-btn" onclick="goBack()">←</button>
-      <h2>تاريخ ألوان شعري 🎨</h2>
+      <h2>تاريخ ألوان شعري</h2>
     </div>
     <div id="color-history-list" class="color-history-list"></div>
   </div>
@@ -481,7 +495,7 @@
       <div class="home-header">
         <div class="header-top">
           <div class="header-greeting">
-            <p class="greeting-small">لوحة التحكم 💅</p>
+            <p class="greeting-small">لوحة التحكم</p>
             <h2 id="st-salon-name">صالوني</h2>
           </div>
           <div style="display:flex;gap:8px;align-items:center">
@@ -510,10 +524,19 @@
             <button class="btn-icon-edit" onclick="showEditSalonForm()">✏️</button>
           </div>
 
+          <!-- Salon Location -->
+          <div class="mgmt-section">
+            <div class="mgmt-section-header">
+              <h4>موقع الصالون على الخريطة</h4>
+              <button class="btn-sm btn-sm-primary" onclick="openSalonLocationPicker()">تحديد الموقع</button>
+            </div>
+            <div id="st-location-status" style="font-size:13px;color:var(--gray);padding:4px 0">لم يتم تحديد الموقع بعد</div>
+          </div>
+
           <!-- Hours -->
           <div class="mgmt-section">
             <div class="mgmt-section-header">
-              <h4>مواعيد الدوام ⏰</h4>
+              <h4>مواعيد الدوام</h4>
               <button class="btn-sm btn-sm-primary" onclick="showHoursForm()">تعديل</button>
             </div>
             <div id="st-hours-list" class="hours-list"></div>
@@ -522,7 +545,7 @@
           <!-- Photos -->
           <div class="mgmt-section">
             <div class="mgmt-section-header">
-              <h4>صور الصالون 📸</h4>
+              <h4>صور الصالون</h4>
               <label class="btn-sm btn-sm-primary" style="cursor:pointer">
                 + رفع
                 <input type="file" id="salon-media-input" accept="image/*,video/mp4,video/webm" style="display:none" onchange="uploadSalonMedia(this)">
@@ -535,7 +558,7 @@
           <!-- Services -->
           <div class="mgmt-section">
             <div class="mgmt-section-header">
-              <h4>الخدمات 💆</h4>
+              <h4>الخدمات</h4>
               <button class="btn-sm btn-sm-primary" onclick="showAddServiceForm()">+ إضافة</button>
             </div>
             <div id="st-services-list" class="services-mgmt-list"></div>
@@ -544,7 +567,7 @@
           <!-- Block Slots -->
           <div class="mgmt-section">
             <div class="mgmt-section-header">
-              <h4>حجب المواعيد 🔒</h4>
+              <h4>حجب المواعيد</h4>
               <button class="btn-sm btn-sm-primary" onclick="showBlockSlotForm()">+ حجب وقت</button>
             </div>
             <div class="media-hint">أغلقي وقتاً محدداً ليتوقف الحجز فيه</div>
@@ -558,7 +581,7 @@
     <!-- ---- TEAM TAB ---- -->
     <div id="stab-team" class="tab">
       <div class="page-header">
-        <h2>فريق الكوفيرات 👩‍🎨</h2>
+        <h2>فريق الكوفيرات</h2>
         <button class="btn-sm btn-sm-primary" onclick="showAddStylistForm()">+ إضافة</button>
       </div>
       <div id="st-stylists-list" class="team-list"></div>
@@ -568,7 +591,7 @@
     <!-- ---- BOOKINGS TAB ---- -->
     <div id="stab-bookings" class="tab">
       <div class="page-header">
-        <h2>الحجوزات 📅</h2>
+        <h2>الحجوزات</h2>
       </div>
       <div class="st-booking-filter-bar">
         <button class="btab active" data-filter="pending" onclick="stFilterBookings('pending',this)">⏳ بانتظار</button>
@@ -582,7 +605,7 @@
 
     <!-- ---- MESSAGES TAB ---- -->
     <div id="stab-chat" class="tab">
-      <div class="page-header"><h2>الرسائل 💬</h2></div>
+      <div class="page-header"><h2>الرسائل</h2></div>
       <div id="st-conversations-list" class="conversations-list"></div>
       <div style="height:90px"></div>
     </div>
@@ -672,7 +695,7 @@
   <!-- ======= BLOCK SLOT MODAL ======= -->
   <div id="modal-block-slot" class="modal-overlay hidden">
     <div class="modal-box">
-      <h3>🔒 حجب وقت</h3>
+      <h3>حجب وقت</h3>
       <div class="form-group">
         <label>الكوفيرة</label>
         <select id="bs-stylist">
@@ -708,7 +731,7 @@
   <div id="modal-salon-form" class="modal-overlay hidden">
     <div class="modal-box">
       <h3 id="salon-form-title">إضافة صالون</h3>
-      <div class="form-group"><label>اسم الصالون *</label><input id="sf-name" type="text" placeholder="مثال: صالون غلامورا"></div>
+      <div class="form-group"><label>اسم الصالون *</label><input id="sf-name" type="text" placeholder="مثال: صالون فيلور"></div>
       <div class="form-group"><label>المدينة *</label><input id="sf-city" type="text" placeholder="رام الله، نابلس..."></div>
       <div class="form-group"><label>العنوان *</label><input id="sf-address" type="text" placeholder="شارع..."></div>
       <div class="form-group"><label>رقم الهاتف</label><input id="sf-phone" type="tel" placeholder="05xxxxxxxx"></div>
@@ -726,10 +749,27 @@
           <span class="ep-item" onclick="selectSalonEmoji(this,'🌟')">🌟</span>
         </div>
       </div>
+      <div class="form-group">
+        <label>موقع الصالون على الخريطة</label>
+        <button class="btn-secondary" style="width:100%;margin-top:4px" onclick="openSalonLocationPicker()">📍 تحديد الموقع على الخريطة</button>
+        <div id="sf-location-status" style="font-size:12px;color:var(--gray);margin-top:4px;text-align:center"></div>
+      </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeModalById('modal-salon-form')">إلغاء</button>
         <button class="btn-primary" onclick="saveSalon()">حفظ</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Location Picker Modal -->
+  <div id="modal-location-picker" class="modal-overlay hidden" style="padding:0">
+    <div class="modal-box" style="width:100%;max-width:100%;height:90vh;padding:0;display:flex;flex-direction:column;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;margin:0">
+      <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--cream2)">
+        <button class="btn-secondary" style="padding:6px 14px" onclick="closeModalById('modal-location-picker')">إلغاء</button>
+        <h4 style="margin:0">اضغطي على موقع الصالون</h4>
+        <button class="btn-primary" style="padding:6px 14px" onclick="confirmSalonLocation()">تأكيد</button>
+      </div>
+      <div id="location-picker-map" style="flex:1;width:100%"></div>
     </div>
   </div>
 
@@ -768,22 +808,8 @@
       <h3>إضافة كوفيرة</h3>
       <div class="form-group"><label>الاسم *</label><input id="stf-name" type="text" placeholder="اسم الكوفيرة"></div>
       <div class="form-group"><label>رقم الهاتف *</label><input id="stf-phone" type="tel" placeholder="05xxxxxxxx"></div>
-      <div class="form-group"><label>البريد الإلكتروني</label><input id="stf-email" type="email" placeholder="اختياري"></div>
       <div class="form-group"><label>سنوات الخبرة</label><input id="stf-exp" type="number" placeholder="3" min="0"></div>
       <div class="form-group"><label>نبذة عنها</label><textarea id="stf-bio" rows="2" placeholder="متخصصة في..."></textarea></div>
-      <div class="form-group">
-        <label>التخصصات</label>
-        <div class="spec-chips">
-          <span class="spec-chip" onclick="toggleSpec(this,'بالياج')">بالياج</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'أومبري')">أومبري</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'كيراتين')">كيراتين</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'قص')">قص</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'مكياج')">مكياج</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'تصفيف')">تصفيف</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'أظافر')">أظافر</span>
-          <span class="spec-chip" onclick="toggleSpec(this,'شعر كيرلي')">شعر كيرلي</span>
-        </div>
-      </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeModalById('modal-stylist-form')">إلغاء</button>
         <button class="btn-primary" onclick="saveStylist()">إضافة</button>
@@ -794,11 +820,11 @@
   <!-- Hours Form Modal -->
   <div id="modal-hours-form" class="modal-overlay hidden">
     <div class="modal-box">
-      <h3>مواعيد دوام الصالون ⏰</h3>
+      <h3>أيام إجازة الصالون</h3>
       <div id="hours-form-rows"></div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeModalById('modal-hours-form')">إلغاء</button>
-        <button class="btn-primary" onclick="saveHours()">حفظ المواعيد</button>
+        <button class="btn-primary" onclick="saveHours()">حفظ</button>
       </div>
     </div>
   </div>
@@ -819,7 +845,33 @@
 
 </div>
 
+<!-- ======= NEAREST SCREEN ======= -->
+<div id="screen-nearest" class="screen slide-up">
+  <div style="padding-top:env(safe-area-inset-top,0px);background:white;position:sticky;top:0;z-index:10;border-bottom:2px solid #f0e8ed">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 16px 16px">
+      <button onclick="goBack()" style="background:#f0e8ed;border:none;border-radius:12px;padding:11px 20px;font-family:Tajawal;font-size:15px;font-weight:700;color:#1A0A0F;cursor:pointer">← رجوع</button>
+      <span style="font-family:Tajawal;font-size:17px;font-weight:700;color:#1A0A0F">📍 الأقرب إليك</span>
+      <button onclick="openMapScreen()" style="background:#6B0F2B;color:white;border:none;border-radius:12px;padding:11px 20px;font-family:Tajawal;font-size:15px;font-weight:700;cursor:pointer">الخريطة</button>
+    </div>
+  </div>
+  <div id="nearest-loading" style="text-align:center;padding:40px;color:var(--gray)">جاري تحديد موقعك...</div>
+  <div id="nearest-list" class="salons-list" style="padding:12px"></div>
+</div>
+
+<!-- ======= MAP SCREEN ======= -->
+<div id="screen-map" class="screen slide-up">
+  <div style="padding-top:env(safe-area-inset-top,0px);background:white;position:sticky;top:0;z-index:10;border-bottom:2px solid #f0e8ed">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 16px 16px">
+      <button onclick="goBack()" style="background:#f0e8ed;border:none;border-radius:12px;padding:11px 20px;font-family:Tajawal;font-size:15px;font-weight:700;color:#1A0A0F;cursor:pointer">← رجوع</button>
+      <span style="font-family:Tajawal;font-size:17px;font-weight:700;color:#1A0A0F">خريطة الصالونات</span>
+      <div style="width:80px"></div>
+    </div>
+  </div>
+  <div id="map-container" style="width:100%;height:calc(100vh - 70px);"></div>
+</div>
+
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!-- Firebase SDK for Push Notifications -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>

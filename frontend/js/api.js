@@ -1,5 +1,13 @@
-const BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : `http://${window.location.hostname}:3000`;
+const BASE = (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform())
+  ? 'https://glamora-salon-production.up.railway.app'
+  : (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://glamora-salon-production.up.railway.app');
 const API = BASE + '/api';
+
+function mediaUrl(url) {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  return BASE + url;
+}
 let authToken = localStorage.getItem('glamora_token');
 let currentUser = JSON.parse(localStorage.getItem('glamora_user') || 'null');
 let socket = null;
@@ -28,7 +36,13 @@ async function apiCall(method, path, body = null) {
   if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(API + path, opts);
+  const url = API + path;
+  let res;
+  try {
+    res = await fetch(url, opts);
+  } catch (fetchErr) {
+    throw new Error(`[${method} ${url}] ${fetchErr.message}`);
+  }
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'حدث خطأ ما');
   return data;
@@ -45,6 +59,10 @@ const Api = {
     get: (id) => apiCall('GET', `/salons/${id}`),
     services: (id, category) => apiCall('GET', `/salons/${id}/services${category ? '?category=' + category : ''}`),
     media: (id) => apiCall('GET', `/media/salon/${id}/media`),
+    rate: (id, stars, comment = '') => apiCall('POST', `/salons/${id}/rate`, { stars, comment }),
+    myRating: (id) => apiCall('GET', `/salons/${id}/my-rating`),
+    updateLocation: (id, latitude, longitude) => apiCall('PUT', `/salons/${id}/location`, { latitude, longitude }),
+    allLocations: () => apiCall('GET', '/salons/all-locations'),
   },
   bookings: {
     my: () => apiCall('GET', '/bookings/my'),

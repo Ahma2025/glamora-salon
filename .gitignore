@@ -9,7 +9,8 @@ backend/firebase-service-account.json
 Thumbs.db
 dist/
 build/
-android/
+android/app/build/
+android/.gradle/
 apns/*.key
 apns/*.p12
 apns/*.pem

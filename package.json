@@ -10,8 +10,10 @@
     "android:open": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor-community/fcm": "^6.0.1",
     "@capacitor/android": "^6.2.1",
     "@capacitor/core": "^6.2.1",
+    "@capacitor/geolocation": "^6.1.1",
     "@capacitor/haptics": "^6.0.0",
     "@capacitor/ios": "^6.0.0",
     "@capacitor/local-notifications": "^6.0.0",
@@ -29,7 +31,8 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.2.1"
+    "@capacitor/cli": "^6.2.1",
+    "jimp": "^1.6.1"
   },
   "engines": {
     "node": ">=18.0.0"

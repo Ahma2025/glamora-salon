@@ -2,10 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>Glamora</string>
+        <string>Velour</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,5 +57,11 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>نحتاج موقعك لعرض أقرب الصالونات إليك</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>نحتاج موقعك لعرض أقرب الصالونات إليك</string>
 </dict>
 </plist>

@@ -9,8 +9,8 @@ db.defaults({
   users: [], salons: [], salon_hours: [], stylists: [],
   services: [], bookings: [], reviews: [], messages: [],
   color_formulas: [], loyalty_transactions: [], stylist_availability: [], notifications: [],
-  salon_media: [], stylist_blocked_slots: [],
-  _counters: { users:0, salons:0, salon_hours:0, stylists:0, services:0, bookings:0, reviews:0, messages:0, color_formulas:0, loyalty_transactions:0, stylist_availability:0, notifications:0, salon_media:0, stylist_blocked_slots:0 }
+  salon_media: [], stylist_blocked_slots: [], salon_ratings: [],
+  _counters: { users:0, salons:0, salon_hours:0, stylists:0, services:0, bookings:0, reviews:0, messages:0, color_formulas:0, loyalty_transactions:0, stylist_availability:0, notifications:0, salon_media:0, stylist_blocked_slots:0, salon_ratings:0 }
 }).write();
 
 function nextId(table) {
@@ -58,6 +58,12 @@ const DB = {
   reviews: {
     insert: (data) => { const id = nextId('reviews'); const row = { id, created_at: now(), ...data }; db.get('reviews').push(row).write(); return row; },
     find: (fn) => db.get('reviews').filter(fn).value(),
+  },
+  salon_ratings: {
+    insert: (data) => { const id = nextId('salon_ratings'); const row = { id, created_at: now(), ...data }; db.get('salon_ratings').push(row).write(); return row; },
+    find: (fn) => db.get('salon_ratings').filter(fn).value(),
+    findOne: (fn) => db.get('salon_ratings').find(fn).value(),
+    update: (fn, data) => { db.get('salon_ratings').filter(fn).each(r => Object.assign(r, data)).write(); },
   },
   messages: {
     insert: (data) => { const id = nextId('messages'); const row = { id, created_at: now(), is_read: 0, ...data }; db.get('messages').push(row).write(); return row; },

@@ -52,6 +52,7 @@ router.put('/profile', authenticate, (req, res) => {
 // FCM Token - save device token for push notifications
 router.post('/fcm-token', authenticate, (req, res) => {
   const { token, platform } = req.body;
+  console.log(`[FCM] Token received for user ${req.user.id} | platform: ${platform} | token: ${token ? token.substring(0,30)+'...' : 'NULL'}`);
   if (!token) return res.status(400).json({ error: 'Token مطلوب' });
 
   // Remove this token from ALL other users first (one device = one account)

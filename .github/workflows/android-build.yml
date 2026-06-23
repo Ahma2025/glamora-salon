@@ -1,0 +1,61 @@
+name: Build Android AAB
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build Android App Bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd glamora-salon
+          npm install
+
+      - name: Sync Capacitor
+        run: |
+          cd glamora-salon
+          npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > /tmp/velour-release.keystore
+
+      - name: Build Release AAB
+        run: |
+          cd glamora-salon/android
+          chmod +x gradlew
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=/tmp/velour-release.keystore \
+            -Pandroid.injected.signing.store.password="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            -Pandroid.injected.signing.key.alias="${{ secrets.ANDROID_KEY_ALIAS }}" \
+            -Pandroid.injected.signing.key.password="${{ secrets.ANDROID_KEY_PASSWORD }}"
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: velour-release-aab
+          path: glamora-salon/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
