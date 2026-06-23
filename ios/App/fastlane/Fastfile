@@ -70,11 +70,11 @@ platform :ios do
 
     match(
       type: "appstore",
-      app_identifier: "com.glamora.salon",
+      app_identifier: "com.velour.salon",
       git_url: ENV["MATCH_GIT_URL"],
       git_basic_authorization: Base64.strict_encode64("#{ENV['GITHUB_ACTOR']}:#{ENV['MATCH_GIT_TOKEN']}"),
       readonly: false,
-      force: true,
+      force: false,
       api_key: api_key,
       keychain_name: "build.keychain",
       keychain_password: "glamora123"
@@ -89,7 +89,7 @@ platform :ios do
         method: "app-store",
         teamID: "RTYG6CS9G2",
         provisioningProfiles: {
-          "com.glamora.salon" => "match AppStore com.glamora.salon"
+          "com.velour.salon" => "match AppStore com.velour.salon"
         }
       }
     )
